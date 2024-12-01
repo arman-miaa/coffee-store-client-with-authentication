@@ -2,47 +2,43 @@ import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import Swal from "sweetalert2";
 
-
 const Users = () => {
   const loadUsers = useLoaderData();
   const [users, setUsers] = useState(loadUsers);
-    const handleDelete = (id) => {
-      
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!",
-        }).then((result) => {
-          if (result.isConfirmed) {
-          
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // delete from the datbase
+        fetch(`https://coffee-store-server-one-coral.vercel.app/users/${id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.deletedCount > 0) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success",
+              });
+              const remaining = users.filter((user) => user._id !== id);
+              setUsers(remaining);
+            }
+          });
+      }
+    });
 
-            // delete from the datbase
-            fetch(`http://localhost:5000/users/${id}`, {
-              method: 'DELETE',
-            })
-              .then(res => res.json())
-              .then(data => {
-                if (data.deletedCount > 0) {
-                  Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success",
-                  });
-                  const remaining = users.filter(user => user._id !== id);
-                  setUsers(remaining)
-                }
-            })
-          }
-        });
-
-      console.log("delete", id);
-    //   fetch(`http://localhost:5000/users/${}`);
+    console.log("delete", id);
+    //   fetch(`https://coffee-store-server-one-coral.vercel.app/users/${}`);
   };
-  
+
   return (
     <div>
       <h2 className="text-2xl">Users {users.length}</h2>

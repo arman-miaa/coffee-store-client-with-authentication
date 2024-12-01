@@ -2,42 +2,38 @@ import { useContext } from "react";
 import { AuthContext } from "../provider/AuthProvider";
 
 const SignUp = () => {
-
-    const { createUser } = useContext(AuthContext);
-    const handleSubmit = e => {
-        e.preventDefault();
-        const form = e.target;
-        const name = form.name.value;
-        const email = form.email.value;
-        const password = form.password.value;
-        createUser(email, password)
-            
-            .then(result => {
-                console.log('user created at fb', result.user);
-                const createdAt = result?.user?.metadata?.creationTime;
-                console.log(createdAt);
-                const newUser = {name, email,createdAt}
-                // save new user info to the database
-                fetch("http://localhost:5000/users", {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify(newUser)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.insertedId) {
-                            
-                            console.log('user created to db');
-                        }
-                })
-            })
-            .catch(error => {
-            console.log('ERROR',error);
+  const { createUser } = useContext(AuthContext);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    createUser(email, password)
+      .then((result) => {
+        console.log("user created at fb", result.user);
+        const createdAt = result?.user?.metadata?.creationTime;
+        console.log(createdAt);
+        const newUser = { name, email, createdAt };
+        // save new user info to the database
+        fetch("https://coffee-store-server-one-coral.vercel.app/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newUser),
         })
-        
-    }
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.insertedId) {
+              console.log("user created to db");
+            }
+          });
+      })
+      .catch((error) => {
+        console.log("ERROR", error);
+      });
+  };
 
   return (
     <div className="hero bg-base-200 min-h-screen">
@@ -61,7 +57,6 @@ const SignUp = () => {
                 placeholder="Name"
                 name="name"
                 className="input input-bordered"
-                
               />
             </div>
             <div className="form-control">
