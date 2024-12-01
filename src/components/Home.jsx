@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import Coffee from './Coffee';
+import Footer from './Footer';
 
 const Home = () => {
 
@@ -23,6 +24,7 @@ const Home = () => {
                     ></Coffee>)
                 }
             </div>
+            <Footer></Footer>
         </div>
     );
 };
